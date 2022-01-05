@@ -1,65 +1,17 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-return-assign */
-/* eslint-disable react/no-danger */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint import/no-extraneous-dependencies: ["error", {"peerDependencies": true}] */
-import { GetStaticPaths, GetStaticProps } from 'next';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
-
+import Prismic from '@prismicio/client';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-
+import { GetStaticPaths, GetStaticProps } from 'next';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { RichText } from 'prismic-dom';
-import Prismic from '@prismicio/client';
-
 import { FiCalendar, FiClock, FiUser } from 'react-icons/fi';
-
-import { getPrismicClient } from '../../services/prismic';
-
-import commonStyles from '../../styles/common.module.scss';
-
+import Comments from '../../components/comments';
 import Header from '../../components/Header';
-
+import { getPrismicClient } from '../../services/prismic';
+import commonStyles from '../../styles/common.module.scss';
+import { PostProps } from './interfaces';
 import styles from './post.module.scss';
-
-interface Post {
-  first_publication_date: string | null;
-  last_publication_date: string | null;
-  data: {
-    title: string;
-    banner: {
-      url: string;
-    };
-    author: string;
-    content: {
-      heading: string;
-      body: {
-        text: string;
-      }[];
-    }[];
-  };
-}
-
-interface PostProps {
-  post: Post;
-  navigation: {
-    prevPost: {
-      uid: string;
-      data: {
-        title: string;
-      };
-    }[];
-    nextPost: {
-      uid: string;
-      data: {
-        title: string;
-      };
-    }[];
-  };
-  preview: boolean;
-}
 
 export default function Post({
   post,
@@ -71,14 +23,17 @@ export default function Post({
     return <h1>Carregando...</h1>;
   }
 
-  const totalWords = post.data.content.reduce((total, contentItem) => {
-    total += contentItem.heading.split(' ').length;
+  const { content } = post.data;
 
-    const words = contentItem.body.map(item => item.text.split(' ').length);
-    words.map(word => (total += word));
-    return total;
-  }, 0);
-  const readTime = Math.ceil(totalWords / 200);
+  const headingSize = content.map(({ heading }) => heading.split(' '))[0]
+    .length;
+
+  const bodySize = content
+    .map(({ body }) => body)[0]
+    .map(({ text }) => text.split(' '))
+    .join('').length;
+
+  const readTime = Math.ceil((headingSize + bodySize) / 200);
 
   const formatedDate = format(
     new Date(post.first_publication_date),
@@ -87,6 +42,21 @@ export default function Post({
       locale: ptBR,
     }
   );
+
+  const isEditedPost =
+    post.first_publication_date !== post.last_publication_date;
+
+  let postEditeDate = '';
+
+  if (isEditedPost) {
+    postEditeDate = format(
+      new Date(post.last_publication_date),
+      "'* editado em' dd MMM yyyy', às 'H:mm",
+      {
+        locale: ptBR,
+      }
+    );
+  }
 
   return (
     <>
@@ -110,16 +80,19 @@ export default function Post({
                 {`${readTime} min`}
               </li>
             </ul>
+
+            {isEditedPost && <p>{postEditeDate}</p>}
           </div>
 
-          {post.data.content.map(content => {
+          {post.data.content.map(allContent => {
             return (
-              <article key={content.heading}>
-                <h2>{content.heading}</h2>
+              <article key={allContent.heading}>
+                <h2>{allContent.heading}</h2>
                 <div
                   className={styles.postContent}
+                  // eslint-disable-next-line react/no-danger
                   dangerouslySetInnerHTML={{
-                    __html: RichText.asHtml(content.body),
+                    __html: RichText.asHtml(allContent.body),
                   }}
                 />
               </article>
@@ -146,6 +119,8 @@ export default function Post({
             </div>
           )}
         </section>
+
+        <Comments />
 
         {preview && (
           <aside>

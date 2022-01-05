@@ -1,29 +1,32 @@
 .banner {
-  width:100%;
+  width: 100%;
   height: 25rem;
   object-fit: cover;
 }
 
 .post {
-  h2{
-    font-size:2.25rem;
-    color:var(--heading);
+  h2 {
+    font-size: 2.25rem;
+    color: var(--heading);
     margin: 3rem 0;
   }
 
-  p, span, a, ul{
-    font-size:1.125rem;
+  p,
+  span,
+  a,
+  ul {
+    font-size: 1.125rem;
     line-height: 1.8;
     margin: 1.8rem 0;
   }
 
   a {
-    color:var(--highlight)
+    color: var(--highlight);
   }
 
-  strong{
+  strong {
     font-weight: 700;
-    color:var(--body)
+    color: var(--body);
   }
 
   ul {
@@ -35,23 +38,23 @@
   }
 }
 
-.postTop{
+.postTop {
   margin-bottom: 4rem;
   > h1 {
-    font-size:3rem;
-    color:var(--heading);
-    margin-bottom:1.5rem;
+    font-size: 3rem;
+    color: var(--heading);
+    margin-bottom: 1.5rem;
   }
 
   > ul {
-    padding:0;
-    margin:0;
+    padding: 0;
+    margin: 0;
     list-style: none;
     display: flex;
 
     & li {
-      margin:0;
-      font-size:0.875rem;
+      margin: 0;
+      font-size: 0.875rem;
 
       & svg {
         margin-right: 0.5rem;
@@ -63,40 +66,38 @@
     }
   }
 
-  > span {
+  > p {
     margin-top: 1rem;
-    display:block;
     font-style: italic;
     font-size: 0.875rem;
-    color:var(--info)
+    color: var(--info);
   }
-
 }
 
 .navigation {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   border-top: 1px solid var(--border);
 
-  h3{
-    font-size:1.125rem;
+  h3 {
+    font-size: 1.125rem;
+    line-height: 1.375rem;
     font-weight: 400;
-    color:var(--heading);
-    margin-bottom:0.5rem;
+    color: var(--heading);
+    margin-bottom: 0.5rem;
   }
 
   a {
-    color:var(--highlight);
-    font-weight:600;
+    color: var(--highlight);
+    font-weight: 600;
   }
 
   div {
     padding-top: 3rem;
   }
 
-  div + div{
+  div + div {
     text-align: right;
-
   }
 }

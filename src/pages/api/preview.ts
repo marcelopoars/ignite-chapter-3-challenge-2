@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable consistent-return */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import Prismic from '@prismicio/client';
 
 import { Document } from '@prismicio/client/types/documents';
 
-const apiEndpoint = process.env.PRISMIC_API_ENDPOINT;
-const accessToken = process.env.PRISMIC_ACCESS_TOKEN;
+const apiEndpoint: string = process.env.PRISMIC_API_ENDPOINT;
+const accessToken: string = process.env.PRISMIC_ACCESS_TOKEN;
 
 function linkResolver(doc: Document): string {
   if (doc.type === 'posts') {
@@ -14,7 +14,6 @@ function linkResolver(doc: Document): string {
   return '/';
 }
 
-// Client method to query from the Prismic repo
 const Client = (req = null) =>
   // eslint-disable-next-line no-use-before-define
   Prismic.client(apiEndpoint, createClientOptions(req, accessToken));
@@ -30,6 +29,7 @@ const createClientOptions = (req = null, prismicAccessToken = null) => {
   };
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const Preview = async (req, res) => {
   const { token: ref, documentId } = req.query;
   const redirectUrl = await Client(req)
